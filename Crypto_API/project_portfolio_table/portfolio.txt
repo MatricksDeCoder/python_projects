@@ -1,0 +1,4 @@
+BTC 1
+ETH 5
+LTC 10
+XRP 100
