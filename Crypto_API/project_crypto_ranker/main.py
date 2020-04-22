@@ -16,21 +16,20 @@ API_KEY = os.getenv("API_KEY")
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 
-
 url = 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
-parameters = {
-  'start':'1',
-  'limit':'10',
-  'sort':'market_cap',
-  'sort_dir':'desc'
-}
 
 headers = {
   'Accepts': 'application/json',
   'X-CMC_PRO_API_KEY': API_KEY,
 }
 
-sort = 'market_cap'
+parameters = {
+                                     'start':'1',
+                                     'limit':'10',
+                                     'convert':'USD',
+                                     'sort_dir':'desc'
+}
+
 session = Session()
 session.headers.update(headers)
 
@@ -50,21 +49,21 @@ while True:
     choice = input('What is your choice? (1-7): ')
 
     if choice == '1':
-        sort  = 'market_cap'
+        parameters['sort'] = 'market_cap'
     if choice == '2':
-        sort = 'price'
+        parameters['sort'] = 'price'
     if choice == '3':
-        sort = 'percent_change_1h'
+        parameters['sort'] = 'percent_change_1h'
     if choice == '4':
-        sort = 'percent_change_1h'
+        parameters['sort'] = 'percent_change_24h'
     if choice == '5':
-        sort = 'percent_change_24h'
+        parameters['sort'] = 'percent_change_7d'
     if choice == '6':
-        sort = 'percent_change_7d'
+        parameters['sort'] = 'volume_24h'
     if choice == '0':
+        parameters['sort'] = 'market_cap'
         break
-
-    parameters['sort'] = sort
+    print  parameters
 
     response = session.get(url, params=parameters)
     data = json.loads(response.text)
@@ -113,18 +112,17 @@ while True:
             market_cap_string = '{:,}'.format(market_cap)
 
         table.add_row([rank,
-                       name,
-                       symbol,
-                       '$' + str(price),
-                       '$' + str(market_cap),
-                       '$' + volume_string,
-                       str(hour_change),
-                       str(day_change),
-                       str(week_change)])
-
-    print "......................................."
-    print(table)
-    print "---------------------------------------"
+                           name,
+                           symbol,
+                           '$' + str(price),
+                           '$' + str(market_cap),
+                           '$' + volume_string,
+                           str(hour_change),
+                           str(day_change),
+                           str(week_change)])
+        print "......................................."
+        print(table)
+        print "---------------------------------------"
 
     choice = input('Again? (y/n): ')
 
